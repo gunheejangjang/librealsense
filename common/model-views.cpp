@@ -2883,28 +2883,65 @@ namespace rs2
    //         auto x = (int)pixels.x;
    //         auto y = (int)pixels.y;
 			//
-			int x = 160;
-			int y = 120;
+			int x1 = 160;
+			int y1 = 120;
+			int x0 = 120;
+			int x2 = 200;
 			//
 			//cys
 			//
-            ss << std::fixed << std::setprecision(0) << ".XYZ." << short_sn << "..unit.." << x << ".. " << y;
+			ss << std::fixed << std::setprecision(0) << "SN."<<short_sn << "..HOVER..(" << x0 << "," << y1 << ")";
 			//
 			// mouse.cursor.x added
 			//
             float val{};
-            if (texture->try_pick(x, y, &val))
+            if (texture->try_pick(x0, y1, &val))
             {
-                ss << ".. *CYS: 0x" << std::hex << static_cast<int>(round(val));
+            //    ss << ").. *CYS: 0x" << std::hex << static_cast<int>(round(val));
             }
 
             if (texture->get_last_frame().is<depth_frame>())
             {
-                auto meters = texture->get_last_frame().as<depth_frame>().get_distance(x, y);
+                auto meters = texture->get_last_frame().as<depth_frame>().get_distance(x0, y1);
 
-                ss << std::dec << ".. " << std::setprecision(2) << meters << " meters..";
+				ss << std::dec << ".. " << std::setprecision(2) << meters << " m..(" << x1 << "," << y1 << ")";
             }
+			//
+			//  2nd point
+			//
+			// float val{};
+			if (texture->try_pick(x1, y1, &val))
+			{
+				//    ss << ").. *CYS: 0x" << std::hex << static_cast<int>(round(val));
+			}
 
+			if (texture->get_last_frame().is<depth_frame>())
+			{
+				auto meters = texture->get_last_frame().as<depth_frame>().get_distance(x1, y1);
+
+				ss << std::dec << ".. " << std::setprecision(2) << meters << " m..(" << x2 << "," << y1 << ")"; ;
+			}
+			//
+			// 3rd point
+			//
+			//
+			//  2nd point
+			//
+			// float val{};
+			if (texture->try_pick(x2, y1, &val))
+			{
+				//    ss << ").. *CYS: 0x" << std::hex << static_cast<int>(round(val));
+			}
+
+			if (texture->get_last_frame().is<depth_frame>())
+			{
+				auto meters = texture->get_last_frame().as<depth_frame>().get_distance(x2, y1);
+
+				ss << std::dec << ".. " << std::setprecision(2) << meters << " m.." ;
+			}
+			//
+			//  edited by CYS
+			//
             std::string msg(ss.str().c_str());
 
             auto flags = ImGuiWindowFlags_NoResize |
